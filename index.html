@@ -11,73 +11,57 @@
 <body>
 
     <header>
-        <h1>Jeopardy!</h1>
+        <!-- Hiding title as per JeopardyLabs style, but leaving controls accessible via hover/top -->
         <div id="controls">
-            <label for="file-input" class="file-upload-btn">Load New Questions (JSON)</label>
+            <label for="file-input" class="file-upload-btn" style="opacity:0.5; font-size: 10px;">Load JSON</label>
             <input type="file" id="file-input" accept=".json">
-            <button id="reset-btn">Reset Game</button>
+            <button id="reset-btn" style="opacity:0.5; font-size: 10px; padding: 5px;">Reset</button>
         </div>
     </header>
 
     <div id="game-board">
-        <!-- Grid will be injected here by JS -->
         <div class="grid-container" id="grid-container"></div>
     </div>
 
+    <!-- Fixed Bottom Scoreboard -->
     <div id="scoreboard">
         <div class="team-score">
-            <div class="team-name">Team 1</div>
-            <div id="score-0" class="score-display">$0</div>
+            <div class="team-name" contenteditable="true">Team 1</div>
+            <div id="score-0" class="score-display">0</div>
+            <div class="team-btn-row">
+                <button class="score-control-btn btn-plus" onclick="handleAnswer(0, true)">+</button>
+                <button class="score-control-btn btn-minus" onclick="handleAnswer(0, false)">-</button>
+            </div>
         </div>
         <div class="team-score">
-            <div class="team-name">Team 2</div>
-            <div id="score-1" class="score-display">$0</div>
+            <div class="team-name" contenteditable="true">Team 2</div>
+            <div id="score-1" class="score-display">0</div>
+            <div class="team-btn-row">
+                <button class="score-control-btn btn-plus" onclick="handleAnswer(1, true)">+</button>
+                <button class="score-control-btn btn-minus" onclick="handleAnswer(1, false)">-</button>
+            </div>
         </div>
         <div class="team-score">
-            <div class="team-name">Team 3</div>
-            <div id="score-2" class="score-display">$0</div>
+            <div class="team-name" contenteditable="true">Team 3</div>
+            <div id="score-2" class="score-display">0</div>
+            <div class="team-btn-row">
+                <button class="score-control-btn btn-plus" onclick="handleAnswer(2, true)">+</button>
+                <button class="score-control-btn btn-minus" onclick="handleAnswer(2, false)">-</button>
+            </div>
         </div>
     </div>
 
     <!-- Modal for Question -->
     <div id="modal">
+        <div id="modal-top-bar">
+            <button id="close-modal-btn" class="modal-nav-btn">Continue (ESC)</button>
+            <button id="reveal-btn-nav" class="modal-nav-btn" onclick="revealAnswer()">Reveal Correct Response
+                (Spacebar)</button>
+        </div>
+
         <div id="modal-content">
-            <span id="modal-close-x"
-                style="align-self: flex-end; cursor: pointer; font-size: 2rem; color: white;">&times;</span>
             <div id="modal-text">Question goes here...</div>
-
-            <button id="reveal-btn" class="modal-btn">Reveal Answer</button>
-
-            <div id="answer-controls">
-                <p style="font-size:1.2rem; margin-bottom:10px; color:#aaa; width: 100%;">Adjust Score:</p>
-
-                <div class="team-controls">
-                    <div class="team-control-group">
-                        <span>Team 1</span>
-                        <div class="team-btn-row">
-                            <button class="modal-btn correct-btn" onclick="handleAnswer(0, true)">+</button>
-                            <button class="modal-btn incorrect-btn" onclick="handleAnswer(0, false)">-</button>
-                        </div>
-                    </div>
-                    <div class="team-control-group">
-                        <span>Team 2</span>
-                        <div class="team-btn-row">
-                            <button class="modal-btn correct-btn" onclick="handleAnswer(1, true)">+</button>
-                            <button class="modal-btn incorrect-btn" onclick="handleAnswer(1, false)">-</button>
-                        </div>
-                    </div>
-                    <div class="team-control-group">
-                        <span>Team 3</span>
-                        <div class="team-btn-row">
-                            <button class="modal-btn correct-btn" onclick="handleAnswer(2, true)">+</button>
-                            <button class="modal-btn incorrect-btn" onclick="handleAnswer(2, false)">-</button>
-                        </div>
-                    </div>
-                </div>
-
-                <button id="close-modal-btn" class="modal-btn"
-                    style="background-color: #555; color: white; margin-top: 20px;">Close Question</button>
-            </div>
+            <div id="answer-text">Answer goes here...</div>
         </div>
     </div>
 
