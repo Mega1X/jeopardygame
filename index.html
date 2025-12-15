@@ -4,68 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeopardy!</title>
+    <title>Game Arcade Hub</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
+    <div class="arcade-container">
+        <header>
+            <h1 class="arcade-title">MEGA ARCADE</h1>
+            <p class="arcade-subtitle">Choose Your Game</p>
+        </header>
 
-    <header>
-        <!-- Hiding title as per JeopardyLabs style, but leaving controls accessible via hover/top -->
-        <div id="controls">
-            <label for="file-input" class="file-upload-btn" style="opacity:0.5; font-size: 10px;">Load JSON</label>
-            <input type="file" id="file-input" accept=".json">
-            <button id="reset-btn" style="opacity:0.5; font-size: 10px; padding: 5px;">Reset</button>
+        <div class="game-grid">
+            <!-- Jeopardy Card -->
+            <a href="jeopardy/index.html" class="game-card jeopardy-card">
+                <div class="card-content">
+                    <h2>JEOPARDY!</h2>
+                    <p>Test your knowledge.</p>
+                </div>
+            </a>
+
+            <!-- Wheel of Fortune Card -->
+            <a href="wheel/index.html" class="game-card wheel-card">
+                <div class="card-content">
+                    <h2>WHEEL OF FORTUNE</h2>
+                    <p>Spin to win! (Coming Soon)</p>
+                </div>
+            </a>
         </div>
-    </header>
 
-    <div id="game-board">
-        <div class="grid-container" id="grid-container"></div>
+        <footer>
+            <p>Select a game to start playing.</p>
+        </footer>
     </div>
-
-    <!-- Fixed Bottom Scoreboard -->
-    <div id="scoreboard">
-        <div class="team-score">
-            <div class="team-name" contenteditable="true">Team 1</div>
-            <div id="score-0" class="score-display">0</div>
-            <div class="team-btn-row">
-                <button class="score-control-btn btn-plus" onclick="handleAnswer(0, true)">+</button>
-                <button class="score-control-btn btn-minus" onclick="handleAnswer(0, false)">-</button>
-            </div>
-        </div>
-        <div class="team-score">
-            <div class="team-name" contenteditable="true">Team 2</div>
-            <div id="score-1" class="score-display">0</div>
-            <div class="team-btn-row">
-                <button class="score-control-btn btn-plus" onclick="handleAnswer(1, true)">+</button>
-                <button class="score-control-btn btn-minus" onclick="handleAnswer(1, false)">-</button>
-            </div>
-        </div>
-        <div class="team-score">
-            <div class="team-name" contenteditable="true">Team 3</div>
-            <div id="score-2" class="score-display">0</div>
-            <div class="team-btn-row">
-                <button class="score-control-btn btn-plus" onclick="handleAnswer(2, true)">+</button>
-                <button class="score-control-btn btn-minus" onclick="handleAnswer(2, false)">-</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for Question -->
-    <div id="modal">
-        <div id="modal-top-bar">
-            <button id="close-modal-btn" class="modal-nav-btn">Continue (ESC)</button>
-            <button id="reveal-btn-nav" class="modal-nav-btn" onclick="revealAnswer()">Reveal Correct Response
-                (Spacebar)</button>
-        </div>
-
-        <div id="modal-content">
-            <div id="modal-text">Question goes here...</div>
-            <div id="answer-text">Answer goes here...</div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
 </body>
 
 </html>
