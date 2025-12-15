@@ -119,7 +119,61 @@ function updateScoreDisplay() {
     }
 }
 
-// ... initGame and renderBoard same but small updates if needed ...
+async function initGame() {
+    try {
+        const response = await fetch('default_questions.json');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        renderBoard(data);
+    } catch (error) {
+        console.warn('Could not fetch default_questions.json', error);
+        if (typeof FALLBACK_QUESTIONS !== 'undefined') {
+            renderBoard(FALLBACK_QUESTIONS);
+        } else {
+            console.error('FALLBACK_QUESTIONS not defined');
+        }
+    }
+}
+
+function renderBoard(data) {
+    window.gameData = data;
+    const grid = document.getElementById('grid-container');
+    grid.innerHTML = '';
+
+    // Headers
+    // Safely handle if data is not what we expect
+    if (!data || !Array.isArray(data) || data.length === 0) {
+        console.error('Invalid data for renderBoard');
+        return;
+    }
+
+    data.forEach(category => {
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        header.textContent = category.category;
+        grid.appendChild(header);
+    });
+
+    // Cards
+    const numQuestions = data[0].questions.length;
+    const numCategories = data.length;
+
+    for (let i = 0; i < numQuestions; i++) {
+        for (let j = 0; j < numCategories; j++) {
+            const questionData = data[j].questions[i];
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.textContent = `$${questionData.value}`;
+
+            card.dataset.question = questionData.question;
+            card.dataset.answer = questionData.answer;
+            card.dataset.value = questionData.value;
+
+            card.addEventListener('click', (e) => handleCardClick(e.target));
+            grid.appendChild(card);
+        }
+    }
+}
 
 function handleCardClick(card) {
     if (card.classList.contains('disabled')) return;
