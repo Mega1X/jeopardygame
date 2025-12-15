@@ -1,0 +1,182 @@
+[
+    {
+        "category": "History (Set 1)",
+        "questions": [
+            {
+                "value": 100,
+                "question": "This declaration was signed in 1776.",
+                "answer": "What is the Declaration of Independence?"
+            },
+            {
+                "value": 200,
+                "question": "He was the first president of the United States.",
+                "answer": "Who is George Washington?"
+            },
+            {
+                "value": 300,
+                "question": "This war was fought between the North and South in the US.",
+                "answer": "What is the Civil War?"
+            },
+            {
+                "value": 400,
+                "question": "In 1492, he sailed the ocean blue.",
+                "answer": "Who is Christopher Columbus?"
+            },
+            {
+                "value": 500,
+                "question": "This ancient civilization built the pyramids.",
+                "answer": "What is Egypt?"
+            }
+        ]
+    },
+    {
+        "category": "Science (Set 1)",
+        "questions": [
+            {
+                "value": 100,
+                "question": "H2O is the chemical formula for this.",
+                "answer": "What is water?"
+            },
+            {
+                "value": 200,
+                "question": "The planet closest to the sun.",
+                "answer": "What is Mercury?"
+            },
+            {
+                "value": 300,
+                "question": "The force that keeps us on the ground.",
+                "answer": "What is gravity?"
+            },
+            {
+                "value": 400,
+                "question": "This organ pumps blood through the body.",
+                "answer": "What is the heart?"
+            },
+            {
+                "value": 500,
+                "question": "The process by which plants make food.",
+                "answer": "What is photosynthesis?"
+            }
+        ]
+    },
+    {
+        "category": "Geography (Set 1)",
+        "questions": [
+            {
+                "value": 100,
+                "question": "The largest continent.",
+                "answer": "What is Asia?"
+            },
+            {
+                "value": 200,
+                "question": "The capital of France.",
+                "answer": "What is Paris?"
+            },
+            {
+                "value": 300,
+                "question": "This river runs through Egypt.",
+                "answer": "What is the Nile?"
+            },
+            {
+                "value": 400,
+                "question": "The strict 50 US states share this number of stars on the flag.",
+                "answer": "What is 50?"
+            },
+            {
+                "value": 500,
+                "question": "The ocean between America and Europe.",
+                "answer": "What is the Atlantic?"
+            }
+        ]
+    },
+    {
+        "category": "Pop Culture (Set 1)",
+        "questions": [
+            {
+                "value": 100,
+                "question": "This mouse is Disney's mascot.",
+                "answer": "Who is Mickey Mouse?"
+            },
+            {
+                "value": 200,
+                "question": "He lives in a pineapple under the sea.",
+                "answer": "Who is Spongebob Squarepants?"
+            },
+            {
+                "value": 300,
+                "question": "The boy who lived.",
+                "answer": "Who is Harry Potter?"
+            },
+            {
+                "value": 400,
+                "question": "This superhero is known as the Dark Knight.",
+                "answer": "Who is Batman?"
+            },
+            {
+                "value": 500,
+                "question": "The king of pop.",
+                "answer": "Who is Michael Jackson?"
+            }
+        ]
+    },
+    {
+        "category": "Sports (Set 1)",
+        "questions": [
+            {
+                "value": 100,
+                "question": "You hit a homerun in this sport.",
+                "answer": "What is Baseball?"
+            },
+            {
+                "value": 200,
+                "question": "The Super Bowl is the championship for this sport.",
+                "answer": "What is Football?"
+            },
+            {
+                "value": 300,
+                "question": "This sport is played on ice with a puck.",
+                "answer": "What is Hockey?"
+            },
+            {
+                "value": 400,
+                "question": "LeBron James plays this sport.",
+                "answer": "What is Basketball?"
+            },
+            {
+                "value": 500,
+                "question": "The World Cup is the biggest tournament in this sport.",
+                "answer": "What is Soccer (or Football)?"
+            }
+        ]
+    },
+    {
+        "category": "Tech (Set 1)",
+        "questions": [
+            {
+                "value": 100,
+                "question": "This company makes the iPhone.",
+                "answer": "What is Apple?"
+            },
+            {
+                "value": 200,
+                "question": "The largest social media network.",
+                "answer": "What is Facebook?"
+            },
+            {
+                "value": 300,
+                "question": "You 'google' things on this search engine.",
+                "answer": "What is Google?"
+            },
+            {
+                "value": 400,
+                "question": "This man founded Microsoft.",
+                "answer": "Who is Bill Gates?"
+            },
+            {
+                "value": 500,
+                "question": "CPU stands for this.",
+                "answer": "What is Central Processing Unit?"
+            }
+        ]
+    }
+]

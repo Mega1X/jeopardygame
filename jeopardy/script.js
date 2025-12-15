@@ -62,8 +62,8 @@ const FALLBACK_QUESTIONS = [
     }
 ];
 
-// 6 Teams: Index 0, 1, 2, 3, 4, 5
-let teamScores = [0, 0, 0, 0, 0, 0];
+// 3 Teams: Index 0, 1, 2
+let teamScores = [0, 0, 0];
 let currentQuestionValue = 0;
 let currentCardElement = null;
 
@@ -83,7 +83,7 @@ function setupEventListeners() {
     document.getElementById('file-input').addEventListener('change', handleFileUpload);
     document.getElementById('reset-btn').addEventListener('click', () => {
         if (confirm('Are you sure you want to reset the game? Scores will be lost.')) {
-            teamScores = [0, 0, 0, 0, 0, 0];
+            teamScores = [0, 0, 0];
             updateScoreDisplay();
             // Re-render
             if (window.gameData) {
@@ -110,7 +110,7 @@ function setupEventListeners() {
 }
 
 function updateScoreDisplay() {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 3; i++) {
         const scoreEl = document.getElementById(`score-${i}`);
         if (scoreEl) {
             scoreEl.textContent = `${teamScores[i]}`; // Removed $ sign to match clean look
@@ -121,12 +121,28 @@ function updateScoreDisplay() {
 
 async function initGame() {
     try {
-        const response = await fetch('default_questions.json');
+        // Randomly select a question set (1 to 6)
+        // Ensure you create files: questions_1.json, questions_2.json ... questions_6.json
+        const randomSet = Math.floor(Math.random() * 6) + 1;
+        const fileName = `questions_${randomSet}.json`;
+        console.log(`Loading random question set: ${fileName}`);
+
+        const response = await fetch(fileName);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         renderBoard(data);
     } catch (error) {
-        console.warn('Could not fetch default_questions.json', error);
+        console.warn('Could not fetch random question set, trying default...', error);
+        // Fallback to default if random file doesn't exist yet
+        try {
+            const defaultResponse = await fetch('default_questions.json');
+            if (defaultResponse.ok) {
+                const defaultData = await defaultResponse.json();
+                renderBoard(defaultData);
+                return;
+            }
+        } catch (e) { console.warn('Default fetch failed', e); }
+
         if (typeof FALLBACK_QUESTIONS !== 'undefined') {
             renderBoard(FALLBACK_QUESTIONS);
         } else {
@@ -236,7 +252,7 @@ function handleFileUpload(event) {
         try {
             const data = JSON.parse(e.target.result);
             if (Array.isArray(data) && data.length > 0 && data[0].questions) {
-                teamScores = [0, 0, 0, 0, 0, 0];
+                teamScores = [0, 0, 0];
                 updateScoreDisplay();
                 renderBoard(data);
                 // alert('Questions loaded successfully!'); // Remove annoyance
