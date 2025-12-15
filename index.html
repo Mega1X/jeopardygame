@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeopardy!</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <header>
@@ -23,29 +25,55 @@
     </div>
 
     <div id="scoreboard">
-        Score: <span id="score" class="score-display">$0</span>
-        <!-- Potential for multiple teams later -->
+        <div class="team-score">
+            <div class="team-name">Team 1</div>
+            <div id="score-0" class="score-display">$0</div>
+        </div>
+        <div class="team-score">
+            <div class="team-name">Team 2</div>
+            <div id="score-1" class="score-display">$0</div>
+        </div>
+        <div class="team-score">
+            <div class="team-name">Team 3</div>
+            <div id="score-2" class="score-display">$0</div>
+        </div>
     </div>
 
     <!-- Modal for Question -->
     <div id="modal">
         <div id="modal-content">
             <div id="modal-text">Question goes here...</div>
-            
+
             <button id="reveal-btn" class="modal-btn">Reveal Answer</button>
 
             <div id="answer-controls">
-                <p style="font-size:1.2rem; margin-bottom:10px; color:#aaa;">Did you get it right?</p>
-                <button id="correct-btn" class="modal-btn" style="background-color: #4CAF50; color: white;">Yes (Add Points)</button>
-                <button id="incorrect-btn" class="modal-btn" style="background-color: #f44336; color: white;">No (Subtract/Ignore)</button> 
-                <!-- Jeopardy rules: incorrect subtracts, but for casual play maybe just ignore or have explicit subtract button. 
-                     Let's keep it simple: Correct adds, "Close" just closes without score change (for viewing) or "Incorrect" subtracts efficiently.
-                     For now: Correct (+), Incorrect (-), Pass/Close (0) -->
-                <button id="close-modal-btn" class="modal-btn" style="background-color: #555; color: white;">Close / Pass</button>
+                <p style="font-size:1.2rem; margin-bottom:10px; color:#aaa; width: 100%;">Adjust Score:</p>
+
+                <div class="team-controls">
+                    <div class="team-control-group">
+                        <span>Team 1</span>
+                        <button class="modal-btn correct-btn" onclick="handleAnswer(0, true)">+</button>
+                        <button class="modal-btn incorrect-btn" onclick="handleAnswer(0, false)">-</button>
+                    </div>
+                    <div class="team-control-group">
+                        <span>Team 2</span>
+                        <button class="modal-btn correct-btn" onclick="handleAnswer(1, true)">+</button>
+                        <button class="modal-btn incorrect-btn" onclick="handleAnswer(1, false)">-</button>
+                    </div>
+                    <div class="team-control-group">
+                        <span>Team 3</span>
+                        <button class="modal-btn correct-btn" onclick="handleAnswer(2, true)">+</button>
+                        <button class="modal-btn incorrect-btn" onclick="handleAnswer(2, false)">-</button>
+                    </div>
+                </div>
+
+                <button id="close-modal-btn" class="modal-btn"
+                    style="background-color: #555; color: white; margin-top: 20px;">Close Question</button>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>

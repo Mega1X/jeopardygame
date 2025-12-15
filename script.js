@@ -1,24 +1,24 @@
-// Fallback default questions in case fetch fails (e.g. file:// context)
+// Fallback default questions in case fetch fails
 const FALLBACK_QUESTIONS = [
     {
-      "category": "History",
-      "questions": [
-        { "value": 100, "question": "This declaration was signed in 1776.", "answer": "What is the Declaration of Independence?" },
-        { "value": 200, "question": "He was the first president of the United States.", "answer": "Who is George Washington?" },
-        { "value": 300, "question": "This war was fought between the North and South in the US.", "answer": "What is the Civil War?" },
-        { "value": 400, "question": "In 1492, he sailed the ocean blue.", "answer": "Who is Christopher Columbus?" },
-        { "value": 500, "question": "This ancient civilization built the pyramids.", "answer": "What is Egypt?" }
-      ]
+        "category": "History",
+        "questions": [
+            { "value": 100, "question": "This declaration was signed in 1776.", "answer": "What is the Declaration of Independence?" },
+            { "value": 200, "question": "He was the first president of the United States.", "answer": "Who is George Washington?" },
+            { "value": 300, "question": "This war was fought between the North and South in the US.", "answer": "What is the Civil War?" },
+            { "value": 400, "question": "In 1492, he sailed the ocean blue.", "answer": "Who is Christopher Columbus?" },
+            { "value": 500, "question": "This ancient civilization built the pyramids.", "answer": "What is Egypt?" }
+        ]
     },
     {
-      "category": "Science",
-      "questions": [
-        { "value": 100, "question": "H2O is the chemical formula for this.", "answer": "What is water?" },
-        { "value": 200, "question": "The planet closest to the sun.", "answer": "What is Mercury?" },
-        { "value": 300, "question": "The force that keeps us on the ground.", "answer": "What is gravity?" },
-        { "value": 400, "question": "This organ pumps blood through the body.", "answer": "What is the heart?" },
-        { "value": 500, "question": "The process by which plants make food.", "answer": "What is photosynthesis?" }
-      ]
+        "category": "Science",
+        "questions": [
+            { "value": 100, "question": "H2O is the chemical formula for this.", "answer": "What is water?" },
+            { "value": 200, "question": "The planet closest to the sun.", "answer": "What is Mercury?" },
+            { "value": 300, "question": "The force that keeps us on the ground.", "answer": "What is gravity?" },
+            { "value": 400, "question": "This organ pumps blood through the body.", "answer": "What is the heart?" },
+            { "value": 500, "question": "The process by which plants make food.", "answer": "What is photosynthesis?" }
+        ]
     },
     {
         "category": "Geography",
@@ -62,9 +62,13 @@ const FALLBACK_QUESTIONS = [
     }
 ];
 
-let currentScore = 0;
+// 3 Teams: Index 0, 1, 2
+let teamScores = [0, 0, 0];
 let currentQuestionValue = 0;
 let currentCardElement = null;
+
+// Expose handleAnswer globally since we used onclick in HTML
+window.handleAnswer = handleAnswer;
 
 document.addEventListener('DOMContentLoaded', () => {
     initGame();
@@ -73,18 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupEventListeners() {
     document.getElementById('reveal-btn').addEventListener('click', revealAnswer);
-    document.getElementById('correct-btn').addEventListener('click', () => handleAnswer(true));
-    document.getElementById('incorrect-btn').addEventListener('click', () => handleAnswer(false));
     document.getElementById('close-modal-btn').addEventListener('click', closeModal);
-    
+
     document.getElementById('file-input').addEventListener('change', handleFileUpload);
     document.getElementById('reset-btn').addEventListener('click', () => {
-        if(confirm('Are you sure you want to reset the game? Score will be lost.')) {
-            currentScore = 0;
+        if (confirm('Are you sure you want to reset the game? Scores will be lost.')) {
+            teamScores = [0, 0, 0];
             updateScoreDisplay();
-            // Re-render the current board to reset disabled cards
-            // Getting the current data is a bit tricky if we don't store it globally.
-            // Let's store it.
+            // Re-render
             if (window.gameData) {
                 renderBoard(window.gameData);
             } else {
@@ -95,30 +95,33 @@ function setupEventListeners() {
 }
 
 function updateScoreDisplay() {
-    const scoreEl = document.getElementById('score');
-    scoreEl.textContent = `$${currentScore}`;
-    scoreEl.style.color = currentScore < 0 ? '#ff5555' : 'white';
+    for (let i = 0; i < 3; i++) {
+        const scoreEl = document.getElementById(`score-${i}`);
+        if (scoreEl) {
+            scoreEl.textContent = `$${teamScores[i]}`;
+            scoreEl.style.color = teamScores[i] < 0 ? '#ff5555' : 'white';
+        }
+    }
 }
 
 async function initGame() {
-    // Try to fetch default questions
     try {
         const response = await fetch('default_questions.json');
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         renderBoard(data);
     } catch (error) {
-        console.warn('Could not fetch default_questions.json (likely due to file:// protocol restriction), using fallback data.', error);
+        console.warn('Could not fetch default_questions.json', error);
         renderBoard(FALLBACK_QUESTIONS);
     }
 }
 
 function renderBoard(data) {
-    window.gameData = data; // Store for reset
+    window.gameData = data;
     const grid = document.getElementById('grid-container');
-    grid.innerHTML = ''; // Clear existing
+    grid.innerHTML = '';
 
-    // 1. Render Headers
+    // Headers
     data.forEach(category => {
         const header = document.createElement('div');
         header.className = 'category-header';
@@ -126,11 +129,7 @@ function renderBoard(data) {
         grid.appendChild(header);
     });
 
-    // 2. Render Questions (assuming all categories have same # of questions)
-    // We need to iterate by ROW, not by category column, for CSS Grid to flow correctly 
-    // IF we just dump them. But CSS Grid default flow is row-major. 
-    // So we need: Row 1 (Cat 1 Q1, Cat 2 Q1, Cat 3 Q1...), Row 2 (Cat 1 Q2...)
-    
+    // Cards
     const numQuestions = data[0].questions.length;
     const numCategories = data.length;
 
@@ -140,8 +139,7 @@ function renderBoard(data) {
             const card = document.createElement('div');
             card.className = 'card';
             card.textContent = `$${questionData.value}`;
-            
-            // Store data
+
             card.dataset.question = questionData.question;
             card.dataset.answer = questionData.answer;
             card.dataset.value = questionData.value;
@@ -157,7 +155,7 @@ function handleCardClick(card) {
 
     currentCardElement = card;
     currentQuestionValue = parseInt(card.dataset.value);
-    
+
     // Show Modal
     const modal = document.getElementById('modal');
     const modalText = document.getElementById('modal-text');
@@ -166,8 +164,10 @@ function handleCardClick(card) {
 
     modalText.textContent = card.dataset.question;
     revealBtn.style.display = 'block';
-    answerControls.style.display = 'none'; // Hide answer controls initially
-    
+    // Use flex, but make sure it respects the CSS class we added
+    answerControls.style.display = 'none';
+    answerControls.classList.remove('visible'); // Custom helper if needed, but display:none override works
+
     modal.style.display = 'flex';
 }
 
@@ -183,24 +183,25 @@ function revealAnswer() {
     }
 }
 
-function handleAnswer(isCorrect) {
+function handleAnswer(teamIndex, isCorrect) {
     if (isCorrect) {
-        currentScore += currentQuestionValue;
+        teamScores[teamIndex] += currentQuestionValue;
     } else {
-        currentScore -= currentQuestionValue;
+        teamScores[teamIndex] -= currentQuestionValue;
     }
     updateScoreDisplay();
-    closeModal();
+    // We do NOT close the modal automatically anymore, because multiple teams might answer! 
+    // Or users might want to adjust multiple scores.
+    // The "Close Question" button is there for when they are done.
 }
 
 function closeModal() {
     const modal = document.getElementById('modal');
     modal.style.display = 'none';
-    
-    // Disable the card
+
     if (currentCardElement) {
         currentCardElement.classList.add('disabled');
-        currentCardElement.textContent = ''; // Clear value
+        currentCardElement.textContent = '';
         currentCardElement = null;
     }
 }
@@ -210,23 +211,21 @@ function handleFileUpload(event) {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         try {
             const data = JSON.parse(e.target.result);
-            // Basic validation
             if (Array.isArray(data) && data.length > 0 && data[0].questions) {
-                currentScore = 0;
+                teamScores = [0, 0, 0];
                 updateScoreDisplay();
                 renderBoard(data);
                 alert('Questions loaded successfully!');
             } else {
-                alert('Invalid JSON format. Please ensure it matches the Jeopardy format.');
+                alert('Invalid JSON format.');
             }
         } catch (error) {
             alert('Error parsing JSON: ' + error.message);
         }
     };
     reader.readAsText(file);
-    // Reset input so same file can be selected again if needed (though unlikely)
     event.target.value = '';
 }
