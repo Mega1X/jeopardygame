@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEventListeners() {
     document.getElementById('reveal-btn').addEventListener('click', revealAnswer);
     document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+    document.getElementById('modal-close-x').addEventListener('click', closeModal);
 
     document.getElementById('file-input').addEventListener('change', handleFileUpload);
     document.getElementById('reset-btn').addEventListener('click', () => {

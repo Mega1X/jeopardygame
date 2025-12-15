@@ -42,6 +42,8 @@
     <!-- Modal for Question -->
     <div id="modal">
         <div id="modal-content">
+            <span id="modal-close-x"
+                style="align-self: flex-end; cursor: pointer; font-size: 2rem; color: white;">&times;</span>
             <div id="modal-text">Question goes here...</div>
 
             <button id="reveal-btn" class="modal-btn">Reveal Answer</button>
@@ -52,18 +54,24 @@
                 <div class="team-controls">
                     <div class="team-control-group">
                         <span>Team 1</span>
-                        <button class="modal-btn correct-btn" onclick="handleAnswer(0, true)">+</button>
-                        <button class="modal-btn incorrect-btn" onclick="handleAnswer(0, false)">-</button>
+                        <div class="team-btn-row">
+                            <button class="modal-btn correct-btn" onclick="handleAnswer(0, true)">+</button>
+                            <button class="modal-btn incorrect-btn" onclick="handleAnswer(0, false)">-</button>
+                        </div>
                     </div>
                     <div class="team-control-group">
                         <span>Team 2</span>
-                        <button class="modal-btn correct-btn" onclick="handleAnswer(1, true)">+</button>
-                        <button class="modal-btn incorrect-btn" onclick="handleAnswer(1, false)">-</button>
+                        <div class="team-btn-row">
+                            <button class="modal-btn correct-btn" onclick="handleAnswer(1, true)">+</button>
+                            <button class="modal-btn incorrect-btn" onclick="handleAnswer(1, false)">-</button>
+                        </div>
                     </div>
                     <div class="team-control-group">
                         <span>Team 3</span>
-                        <button class="modal-btn correct-btn" onclick="handleAnswer(2, true)">+</button>
-                        <button class="modal-btn incorrect-btn" onclick="handleAnswer(2, false)">-</button>
+                        <div class="team-btn-row">
+                            <button class="modal-btn correct-btn" onclick="handleAnswer(2, true)">+</button>
+                            <button class="modal-btn incorrect-btn" onclick="handleAnswer(2, false)">-</button>
+                        </div>
                     </div>
                 </div>
 

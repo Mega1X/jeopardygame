@@ -143,8 +143,10 @@ button:hover {
 /* Scoreboard */
 #scoreboard {
     display: flex;
-    justify-content: space-around;
-    /* Space out the 3 teams */
+    justify-content: center;
+    /* Center them instead of space-around */
+    gap: 40px;
+    /* Add explicit gap */
     background-color: #000;
     padding: 10px;
     font-size: 1.2rem;
@@ -156,77 +158,22 @@ button:hover {
 .team-score {
     text-align: center;
     border: 1px solid #333;
-    padding: 5px 15px;
+    padding: 10px 20px;
+    /* More padding */
     background: #111;
-    min-width: 100px;
+    min-width: 150px;
+    /* Wider */
 }
 
-.team-name {
-    color: var(--jeopardy-yellow);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-}
+/* ... existing team-name ... */
 
-.score-display {
-    font-size: 1.5rem;
-    color: #f00;
-    /* Red generic scoreboard color */
-}
-
-/* Modal for Question/Answer */
-#modal {
-    display: none;
-    /* Hidden by default */
-    position: fixed;
-    z-index: 100;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: var(--modal-bg);
-    justify-content: center;
-    align-items: center;
-}
-
-#modal-content {
-    background-color: var(--jeopardy-blue);
-    border: 4px solid #fff;
-    width: 90%;
-    max-width: 900px;
-    min-height: 500px;
-    /* Slightly taller for controls */
-    padding: 30px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-}
-
-#modal-text {
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 4px #000;
-    text-transform: uppercase;
-}
-
-#answer-controls {
-    display: none;
-    /* Hidden until answer is revealed */
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
+/* ... existing styles ... */
 
 .team-controls {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
     flex-wrap: wrap;
-    /* Wrap on small screens */
 }
 
 .team-control-group {
@@ -234,14 +181,21 @@ button:hover {
     flex-direction: column;
     align-items: center;
     background: rgba(0, 0, 0, 0.3);
-    padding: 10px;
+    padding: 15px;
     border-radius: 8px;
     border: 1px solid #444;
 }
 
+/* Container for the buttons inside the group to make them side-by-side */
+.team-btn-row {
+    display: flex;
+    gap: 10px;
+}
+
 .team-control-group span {
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
     color: var(--jeopardy-yellow);
 }
 
