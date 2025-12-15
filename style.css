@@ -53,6 +53,8 @@ h1 {
     justify-content: center;
     align-items: center;
     padding: 10px;
+    padding-bottom: 120px;
+    /* Space for fixed scoreboard */
     background-color: var(--jeopardy-blue);
 }
 
@@ -115,6 +117,14 @@ h1 {
     padding: 10px;
     border-top: none;
     align-items: flex-end;
+
+    /* Fix to bottom and float above modal */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 300;
+    box-sizing: border-box;
 }
 
 .team-score {
