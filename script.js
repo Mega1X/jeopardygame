@@ -186,13 +186,18 @@ function revealAnswer() {
 function handleAnswer(teamIndex, isCorrect) {
     if (isCorrect) {
         teamScores[teamIndex] += currentQuestionValue;
+        updateScoreDisplay();
+
+        // Slight delay to allow the score to update visually before the alert freezes the UI
+        setTimeout(() => {
+            alert(`Points added to Team ${teamIndex + 1}! Choose the next question.`);
+            closeModal();
+        }, 50);
     } else {
         teamScores[teamIndex] -= currentQuestionValue;
+        updateScoreDisplay();
+        // Do not close on incorrect, allow other teams to try.
     }
-    updateScoreDisplay();
-    // We do NOT close the modal automatically anymore, because multiple teams might answer! 
-    // Or users might want to adjust multiple scores.
-    // The "Close Question" button is there for when they are done.
 }
 
 function closeModal() {
