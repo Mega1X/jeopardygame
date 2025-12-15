@@ -125,6 +125,8 @@ h1 {
     width: 100%;
     z-index: 300;
     box-sizing: border-box;
+    flex-wrap: wrap;
+    /* Allow wrapping for 6 teams */
 }
 
 .team-score {

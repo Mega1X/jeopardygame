@@ -62,8 +62,8 @@ const FALLBACK_QUESTIONS = [
     }
 ];
 
-// 3 Teams: Index 0, 1, 2
-let teamScores = [0, 0, 0];
+// 6 Teams: Index 0, 1, 2, 3, 4, 5
+let teamScores = [0, 0, 0, 0, 0, 0];
 let currentQuestionValue = 0;
 let currentCardElement = null;
 
@@ -83,7 +83,7 @@ function setupEventListeners() {
     document.getElementById('file-input').addEventListener('change', handleFileUpload);
     document.getElementById('reset-btn').addEventListener('click', () => {
         if (confirm('Are you sure you want to reset the game? Scores will be lost.')) {
-            teamScores = [0, 0, 0];
+            teamScores = [0, 0, 0, 0, 0, 0];
             updateScoreDisplay();
             // Re-render
             if (window.gameData) {
@@ -110,7 +110,7 @@ function setupEventListeners() {
 }
 
 function updateScoreDisplay() {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 6; i++) {
         const scoreEl = document.getElementById(`score-${i}`);
         if (scoreEl) {
             scoreEl.textContent = `${teamScores[i]}`; // Removed $ sign to match clean look
@@ -236,7 +236,7 @@ function handleFileUpload(event) {
         try {
             const data = JSON.parse(e.target.result);
             if (Array.isArray(data) && data.length > 0 && data[0].questions) {
-                teamScores = [0, 0, 0];
+                teamScores = [0, 0, 0, 0, 0, 0];
                 updateScoreDisplay();
                 renderBoard(data);
                 // alert('Questions loaded successfully!'); // Remove annoyance
