@@ -176,10 +176,17 @@ h1 {
 .key:disabled {
     background: #222;
     color: #444;
-    cursor: default;
+    cursor: not-allowed;
     text-decoration: line-through;
-    /* Cross out used letters */
+    opacity: 0.5;
+    /* Fade out effect */
     border-color: #333;
+}
+
+.key.used {
+    background: #000;
+    color: #333;
+    border-color: #111;
 }
 
 #solve-area {
