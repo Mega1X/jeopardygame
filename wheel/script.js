@@ -17,7 +17,7 @@ const segments = [
     { color: "#00FFFF", text: "$650", value: 650 },
     { color: "#FFC0CB", text: "FREE PLAY", value: 500 }, // Treat as 500 for now
     { color: "#008000", text: "$700", value: 700 },
-    { color: "#FFD700", text: "LC", value: 1000 }, // Lose Turn / 1000 placeholder
+    { color: "#FFD700", text: "$1000", value: 1000 }, // Renamed from LC
     { color: "#0000FF", text: "$800", value: 800 },
     { color: "#FFFF00", text: "$500", value: 500 },
     { color: "#FFA500", text: "$650", value: 650 },

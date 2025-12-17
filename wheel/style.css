@@ -175,8 +175,11 @@ h1 {
 
 .key:disabled {
     background: #222;
-    color: #555;
+    color: #444;
     cursor: default;
+    text-decoration: line-through;
+    /* Cross out used letters */
+    border-color: #333;
 }
 
 #solve-area {
