@@ -1,3 +1,31 @@
+// 24 Segments (Standard-ish distribution)
+const segments = [
+    { color: "#FF0000", text: "BANKRUPT", value: 0 },
+    { color: "#00FF00", text: "$500", value: 500 },
+    { color: "#0000FF", text: "$900", value: 900 },
+    { color: "#FFFF00", text: "$700", value: 700 },
+    { color: "#FFA500", text: "$500", value: 500 },
+    { color: "#800080", text: "$800", value: 800 },
+    { color: "#00FFFF", text: "$600", value: 600 },
+    { color: "#FFC0CB", text: "$700", value: 700 },
+    { color: "#FF0000", text: "LOSE TURN", value: -1 },
+    { color: "#008000", text: "$600", value: 600 },
+    { color: "#0000FF", text: "$550", value: 550 },
+    { color: "#FFFF00", text: "$500", value: 500 },
+    { color: "#FFA500", text: "$900", value: 900 },
+    { color: "#800080", text: "BANKRUPT", value: 0 },
+    { color: "#00FFFF", text: "$650", value: 650 },
+    { color: "#FFC0CB", text: "FREE PLAY", value: 500 }, // Treat as 500 for now
+    { color: "#008000", text: "$700", value: 700 },
+    { color: "#FFD700", text: "LC", value: 1000 }, // Lose Turn / 1000 placeholder
+    { color: "#0000FF", text: "$800", value: 800 },
+    { color: "#FFFF00", text: "$500", value: 500 },
+    { color: "#FFA500", text: "$650", value: 650 },
+    { color: "#800080", text: "$500", value: 500 },
+    { color: "#00FFFF", text: "$900", value: 900 },
+    { color: "#C0C0C0", text: "$5000", value: 5000 } // Top Dollar
+];
+
 const puzzles = [
     { category: "PHRASE", text: "IT RAINS CATS AND DOGS" },
     { category: "MOVIE TITLE", text: "THE EMPIRE STRIKES BACK" },
@@ -7,22 +35,12 @@ const puzzles = [
     { category: "SONG TITLE", text: "SWEET HOME ALABAMA" }
 ];
 
-const segments = [
-    { color: "#FF0000", text: "BANKRUPT", value: 0 },
-    { color: "#00FF00", text: "$500", value: 500 },
-    { color: "#0000FF", text: "$1000", value: 1000 },
-    { color: "#FFFF00", text: "$700", value: 700 },
-    { color: "#FFA500", text: "$500", value: 500 },
-    { color: "#800080", text: "$2500", value: 2500 },
-    { color: "#00FFFF", text: "$600", value: 600 },
-    { color: "#FFC0CB", text: "LOSE TURN", value: -1 }
-];
-
 let currentPuzzle = {};
 let score = 0;
 let wheelRotation = 0;
 let isSpinning = false;
 let currentSpinValue = 0;
+let consecutiveBadSpins = 0; // Fairness tracker
 
 // Initialize
 function initGame() {
@@ -190,34 +208,91 @@ function checkWin() {
 function drawWheel() {
     const canvas = document.getElementById('wheel-canvas');
     const ctx = canvas.getContext('2d');
-    const radius = canvas.width / 2;
-    const arc = (2 * Math.PI) / segments.length;
 
-    // Set real size
-    canvas.width = 300;
-    canvas.height = 300;
+    // Increase resolution for crisper text
+    const size = 600;
+    canvas.width = size;
+    canvas.height = size;
+
+    const centerX = size / 2;
+    const centerY = size / 2;
+    const radius = size / 2 - 20; // 20px padding for pegs
+    const arc = (2 * Math.PI) / segments.length;
 
     segments.forEach((seg, i) => {
         const angle = i * arc;
         const color = seg.color;
 
         ctx.beginPath();
-        ctx.fillStyle = color;
-        ctx.moveTo(radius, radius);
-        ctx.arc(radius, radius, radius, angle, angle + arc);
-        ctx.lineTo(radius, radius);
+        // Gradient for depth
+        const gradient = ctx.createRadialGradient(centerX, centerY, radius / 4, centerX, centerY, radius);
+        gradient.addColorStop(0, color);
+        gradient.addColorStop(1, shadeColor(color, -20)); // Darker rim
+
+        ctx.fillStyle = gradient;
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, angle, angle + arc);
+        ctx.lineTo(centerX, centerY);
         ctx.fill();
+        ctx.stroke();
 
         // Text
         ctx.save();
-        ctx.translate(radius, radius);
+        ctx.translate(centerX, centerY);
         ctx.rotate(angle + arc / 2);
         ctx.textAlign = "right";
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 14px Arial";
-        ctx.fillText(seg.text, radius - 10, 5);
+        ctx.fillStyle = (seg.text === "BANKRUPT" || seg.text === "LOSE TURN") ? "#FFF" : "#000";
+        if (["BANKRUPT", "LOSE TURN"].includes(seg.text)) ctx.fillStyle = "#FFF";
+        else ctx.fillStyle = "#FFF"; // All white text usually looks best on dark/neon colors
+
+        ctx.font = "bold 24px Arial";
+        ctx.shadowColor = "black";
+        ctx.shadowBlur = 4;
+        ctx.fillText(seg.text, radius - 40, 8);
         ctx.restore();
     });
+
+    // Draw Pegs
+    ctx.fillStyle = "white";
+    for (let i = 0; i < segments.length; i++) {
+        const pegAngle = i * arc;
+        const pegX = centerX + (radius + 10) * Math.cos(pegAngle);
+        const pegY = centerY + (radius + 10) * Math.sin(pegAngle);
+
+        ctx.beginPath();
+        ctx.arc(pegX, pegY, 5, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+
+    // Center Cap
+    ctx.beginPath();
+    ctx.fillStyle = "gold";
+    ctx.arc(centerX, centerY, 40, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = "#DAA520";
+    ctx.lineWidth = 5;
+    ctx.stroke();
+}
+
+// Helper to darken colors for gradient
+function shadeColor(color, percent) {
+    let R = parseInt(color.substring(1, 3), 16);
+    let G = parseInt(color.substring(3, 5), 16);
+    let B = parseInt(color.substring(5, 7), 16);
+
+    R = parseInt(R * (100 + percent) / 100);
+    G = parseInt(G * (100 + percent) / 100);
+    B = parseInt(B * (100 + percent) / 100);
+
+    R = (R < 255) ? R : 255;
+    G = (G < 255) ? G : 255;
+    B = (B < 255) ? B : 255;
+
+    const RR = ((R.toString(16).length == 1) ? "0" + R.toString(16) : R.toString(16));
+    const GG = ((G.toString(16).length == 1) ? "0" + G.toString(16) : G.toString(16));
+    const BB = ((B.toString(16).length == 1) ? "0" + B.toString(16) : B.toString(16));
+
+    return "#" + RR + GG + BB;
 }
 
 function spinWheel() {
@@ -226,12 +301,30 @@ function spinWheel() {
     document.getElementById('spin-btn').disabled = true;
     setMessage("Spinning...");
 
-    // Random spin force
-    const extraSpins = 5 + Math.random() * 5;
-    const finalAngle = Math.random() * 360;
-    const totalRotation = (extraSpins * 360) + finalAngle;
+    // Determine Result Logic (Fairness Check)
+    // We calculate the final angle *before* we spin so we know the result
+    let extraSpins = 5 + Math.random() * 5;
+    let finalAngle = Math.random() * 360;
 
-    wheelRotation += totalRotation; // Keep increasing to spin consistently
+    // Check predicted result
+    // Wheel rotates clockwise, so 0 is 3 o'clock. 
+    // We need to simulate the result logic here to check fairness
+    let predictedRotation = wheelRotation + (extraSpins * 360) + finalAngle;
+    let predictedResult = getResultFromRotation(predictedRotation);
+
+    // If 2 bad spins already, and this is another bad one... reroll until it's safe
+    if (consecutiveBadSpins >= 2 && (predictedResult.value <= 0)) {
+        console.log("Fairness Triggered: Rerolling to avoid 3rd bad spin.");
+        let safetyCounter = 0;
+        while (predictedResult.value <= 0 && safetyCounter < 50) {
+            finalAngle = Math.random() * 360;
+            predictedRotation = wheelRotation + (extraSpins * 360) + finalAngle;
+            predictedResult = getResultFromRotation(predictedRotation);
+            safetyCounter++;
+        }
+    }
+
+    wheelRotation += (extraSpins * 360) + finalAngle;
 
     const wheel = document.getElementById('wheel-canvas');
     wheel.style.transform = `rotate(${wheelRotation}deg)`;
@@ -239,31 +332,33 @@ function spinWheel() {
     setTimeout(() => {
         isSpinning = false;
         calculateResult(wheelRotation % 360);
-    }, 4000); // Match CSS transition time
+    }, 4000);
+}
+
+function getResultFromRotation(deg) {
+    const sliceDeg = 360 / segments.length;
+    let actualDeg = (360 - (deg % 360) + 270) % 360;
+    const index = Math.floor(actualDeg / sliceDeg);
+    return segments[index] || segments[0];
 }
 
 function calculateResult(deg) {
-    // Determine segment based on degrees
-    // 0 deg is right (3 o'clock). Arrow is top (270 deg / -90 deg visually).
-    // This math can be finicky, approximating for demo.
-    const sliceDeg = 360 / segments.length;
-    // Normalize to standard circle where 0 is top
-    let actualDeg = (360 - deg + 270) % 360; // 0 at top
-
-    const index = Math.floor(actualDeg / sliceDeg);
-    const result = segments[index];
+    const result = getResultFromRotation(deg);
 
     setMessage(`Landed on: ${result.text}`);
     currentSpinValue = result.value;
 
-    if (result.text === "BANKRUPT") {
-        score = 0;
-        updateScore(score);
-        document.getElementById('spin-btn').disabled = false;
-    } else if (result.text === "LOSE TURN") {
+    if (result.value <= 0) {
+        // Bad Spin
+        consecutiveBadSpins++;
+        if (result.text === "BANKRUPT") {
+            score = 0;
+            updateScore(score);
+        }
         document.getElementById('spin-btn').disabled = false;
     } else {
-        // Allow Guess
+        // Good Spin
+        consecutiveBadSpins = 0; // Reset counter
         enableKeyboard();
     }
 }
