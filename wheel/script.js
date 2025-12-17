@@ -43,26 +43,94 @@ function renderBoard() {
     const board = document.getElementById('puzzle-board');
     board.innerHTML = '';
 
-    // Simple logic to fit text on board (wrapping not perfect, but functional)
-    const text = currentPuzzle.text.toUpperCase();
+    // Standard Wheel Board: 4 Rows. 
+    // Row 1: 12 tiles (we'll use 14 for simplicity, but pad borders)
+    // Row 2: 14 tiles
+    // Row 3: 14 tiles
+    // Row 4: 12 tiles
+    // For this implementation, we will use 4 rows of 14 columns each for standard handling.
 
-    for (let char of text) {
-        const tile = document.createElement('div');
-        tile.className = 'tile';
+    const ROWS = 4;
+    const COLS = 14;
+    const phrase = currentPuzzle.text.toUpperCase();
+    const words = phrase.split(' ');
 
-        if (char.match(/[A-Z]/)) {
-            tile.classList.add('active'); // White tile
-            tile.dataset.char = char;
-            tile.innerHTML = `<span style="display:none">${char}</span>`;
-        } else if (char === ' ') {
-            // Space, remains green
+    // formattedRows will hold arrays of characters for each row
+    let formattedRows = Array(ROWS).fill(null).map(() => Array(COLS).fill(null));
+
+    // Logic to distribute words
+    let currentRow = 0;
+    let currentLineWords = [];
+
+    // Very basic greedy fit + centering
+    // Note: A perfect auto-layout algorithm is complex, 
+    // we will try to fill Row 1, if not fit, go to Row 2, etc.
+    // Ideally, we center vertically too.
+
+    // 1. Group words into lines
+    let lines = [[], [], [], []];
+    let lineIndex = 0;
+
+    words.forEach(word => {
+        // Check if word fits in current line
+        let currentLen = lines[lineIndex].reduce((acc, w) => acc + w.length + 1, 0) - 1; // -1 for trailing space
+        if (currentLen < 0) currentLen = 0;
+
+        if (currentLen + word.length + (currentLen > 0 ? 1 : 0) <= COLS) {
+            lines[lineIndex].push(word);
         } else {
-            // Punctuation
-            tile.classList.add('revealed');
-            tile.classList.add('active');
-            tile.innerHTML = `<span>${char}</span>`;
+            // Move to next line
+            lineIndex++;
+            if (lineIndex < ROWS) {
+                lines[lineIndex].push(word);
+            }
         }
-        board.appendChild(tile);
+    });
+
+    // Vertical Centering: Move lines down if top rows are empty
+    // Count used lines
+    let usedLines = lines.filter(l => l.length > 0).length;
+    let startRow = 0;
+    if (usedLines === 1) startRow = 1; // Center on row 2
+    else if (usedLines === 2) startRow = 1; // Center on rows 2,3
+    else if (usedLines === 3) startRow = 0; // Rows 1,2,3
+
+    // 2. Map lines to grid
+    lines.forEach((lineWords, idx) => {
+        if (lineWords.length === 0) return;
+
+        let rowIdx = startRow + idx;
+        if (rowIdx >= ROWS) return; // Overflow protection
+
+        // Calculate text and centering
+        let lineStr = lineWords.join(' ');
+        let padding = Math.floor((COLS - lineStr.length) / 2);
+
+        for (let i = 0; i < lineStr.length; i++) {
+            formattedRows[rowIdx][padding + i] = lineStr[i];
+        }
+    });
+
+    // 3. Render HTML
+    for (let r = 0; r < ROWS; r++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'board-row';
+
+        for (let c = 0; c < COLS; c++) {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+
+            const char = formattedRows[r][c];
+            if (char && char !== ' ') {
+                tile.classList.add('active');
+                tile.dataset.char = char;
+                tile.innerHTML = `<span style="display:none">${char}</span>`;
+            }
+            // Else it remains a dark green empty tile
+
+            rowDiv.appendChild(tile);
+        }
+        board.appendChild(rowDiv);
     }
 }
 
